@@ -45,8 +45,18 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "editor.codeActionsOnSave": {
+        "source.fixAll.stylelint": "always",
+        "source.fixAll.eslint": "always",
+        "source.organizeLinkDefinitions": "always",
+        // TS lsの設定項目
+        // https://github.com/typescript-language-server/typescript-language-server/blob/master/README.md
+        "source.fixAll.ts": "always",
+        "source.addMissingImports.ts": "always",
+        "source.sortImports": "never",
+        "source.removeUnused.ts": "never",
         "source.organizeImports": "never",
-        "source.fixAll.eslint": "explicit"
+        "source.removeUnusedImports": "never",
+
     },
     "editor.quickSuggestions": {
         "other": false,
@@ -392,7 +402,8 @@
         "*.log": "log",
         "*.side": "json",
         "*.jb": "ruby",
-        "*.neon": "yaml"
+        "*.neon": "yaml",
+        "*.sql": "pgsql"
     },
     "dart.previewFlutterUiGuidesCustomTracking": true,
     "outline.showVariables": false,
@@ -489,12 +500,14 @@
         "bensampo",
         "blogdescription",
         "blogname",
+        "Bosyu",
         "bresaise",
         "carotte",
         "chocolat",
         "Cookpit",
         "customfunction",
         "customizer",
+        "dbgenerated",
         "Dispatchable",
         "Docu",
         "doesnt",
@@ -504,12 +517,21 @@
         "exif",
         "fadein",
         "fapri",
+        "fbclid",
         "filesystems",
         "firstname",
         "fluentmail",
+        "forwardedfor",
+        "Freee",
         "fukuda",
+        "gclid",
         "ginpei",
+        "googleads",
         "gsap",
+        "gzcat",
+        "hubspot",
+        "hubspotutk",
+        "hutk",
         "ICHIBA",
         "inada",
         "ishii",
@@ -518,11 +540,14 @@
         "kazuhiro",
         "kazunari",
         "koinobori",
+        "kokyaku",
         "kouji",
         "larastan",
         "Laravel",
         "lastname",
         "lazyload",
+        "liff",
+        "linkto",
         "mailhog",
         "mapo",
         "markdwon",
@@ -551,6 +576,7 @@
         "popperjs",
         "porc",
         "postname",
+        "qrcode",
         "Queueable",
         "RAKUTEN",
         "rapees",
@@ -568,26 +594,32 @@
         "shortcode",
         "shunsuke",
         "sitedes",
+        "soldout",
         "splide",
         "squoosh",
         "strval",
         "Supabase",
         "swiper",
         "taragi",
+        "tiktok",
+        "Timestamptz",
         "Tokenable",
         "tomoko",
         "toppageslider",
         "Ulids",
         "UlidSlugable",
         "ulike",
+        "usecase",
         "usermeta",
+        "uuidv",
         "VITE",
         "vuex",
         "webp",
         "wppb",
         "wpulike",
         "yamamoto",
-        "yukihide"
+        "yukihide",
+        "zgrep"
     ],
     "editor.formatOnPaste": true,
     "editor.fontSize": 11,
@@ -722,8 +754,8 @@
     "solargraph.autoformat": true,
     "solargraph.useBundler": false,
     "explorer.confirmPasteNative": false,
-    "[plantuml]": {
-        "editor.defaultFormatter": "jebbs.plantuml"
+    "[postgres]": {
+        "editor.formatOnSave": false
     },
     "vue.server.hybridMode": false,
     "prisma.showPrismaDataPlatformNotification": false,
@@ -736,7 +768,7 @@
     "scm.autoReveal": false,
     "editor.unicodeHighlight.invisibleCharacters": false,
     "diffEditor.renderSideBySide": true,
-    "diffEditor.ignoreTrimWhitespace": true,
+    "diffEditor.ignoreTrimWhitespace": false,
     "liveSassCompile.settings.formats": [
 
         {
@@ -747,4 +779,17 @@
         }
     ],
     "emmet.showSuggestionsAsSnippets": true,
+    "roo-cline.allowedCommands": [
+        "npm test",
+        "npm install",
+        "tsc",
+        "git log",
+        "git diff",
+        "git show",
+        "npx tsc --noEmit",
+        "yarn lint",
+        "yarn format:check"
+    ],
+    "redoclyOpenAPI.user.anonymousId": "9505b682-a13b-4333-a526-2c796f540e82",
+    "editor.stickyScroll.enabled": false,
 }

@@ -24,7 +24,7 @@
         "command": "explorer.newFolder"
     },
     {
-        "key": "shift+alt+j",
+        "key": "shift+cmd+j",
         "command": "workbench.action.toggleMaximizedPanel"
     },
     {
@@ -223,5 +223,15 @@
     {
         "key": "shift+cmd+r",
         "command": "roo-cline.SidebarProvider.focus"
+    },
+    {
+        "key": "ctrl+cmd+v",
+        "command": "markdown.showPreview",
+        "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+    },
+    {
+        "key": "shift+cmd+v",
+        "command": "-markdown.showPreview",
+        "when": "!notebookEditorFocused && editorLangId == 'markdown'"
     }
 ]
