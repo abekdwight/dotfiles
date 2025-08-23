@@ -1,5 +1,5 @@
 format = """
-$time\
+$time
 $all
 """
 
@@ -12,3 +12,12 @@ format = '[\[$time\]]($style) '
 time_format = '%T'
 utc_time_offset = '+9'
 # time_range = '10:00:00-14:00:00'
+
+[gcloud]
+disabled = true
+
+[hostname]
+disabled = true
+
+[username]
+disabled = true

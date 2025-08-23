@@ -17,6 +17,7 @@
 	bc = "!f() { branch | grep -v \"master\\|main\\|develop\" | xargs git branch -D }; f"
 
 [ghq]
+    root=~/.claude
 	root=~/www
 	root=~/ghq
 
@@ -55,3 +56,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[blame]
+	ignoreRevsFile = .git-blame-ignore-revs

@@ -64,13 +64,14 @@
         "strings": false
     },
     "editor.quickSuggestionsDelay": 10,
-    "terminal.integrated.rendererType": "dom",
+    // "terminal.integrated.rendererType": "dom",
     "editor.tabSize": 2,
     "intelephense.diagnostics.undefinedConstants": false,
     "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar",
     "php-cs-fixer.allowRisky": true,
     "javascript.format.enable": false,
     "terminal.integrated.fontFamily": "'Hack Nerd Font Mono', monospace",
+    "terminal.integrated.shellIntegration.enabled": false,
     "javascript.updateImportsOnFileMove.enabled": "always",
     "todo-tree.tree.showScanModeButton": false,
     "todo-tree.general.tags": [
@@ -600,9 +601,11 @@
         "strval",
         "Supabase",
         "swiper",
+        "takikai",
         "taragi",
         "tiktok",
         "Timestamptz",
+        "TOGGL",
         "Tokenable",
         "tomoko",
         "toppageslider",
@@ -761,14 +764,15 @@
     "prisma.showPrismaDataPlatformNotification": false,
     "github.copilot.editor.enableAutoCompletions": true,
     "[markdown]": {
-        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+        "diffEditor.ignoreTrimWhitespace": false
     },
     "diffEditor.maxComputationTime": 0,
     "scm.experimental.showHistoryGraph": true,
     "scm.autoReveal": false,
     "editor.unicodeHighlight.invisibleCharacters": false,
     "diffEditor.renderSideBySide": true,
-    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.ignoreTrimWhitespace": true,
     "liveSassCompile.settings.formats": [
 
         {
@@ -792,4 +796,11 @@
     ],
     "redoclyOpenAPI.user.anonymousId": "9505b682-a13b-4333-a526-2c796f540e82",
     "editor.stickyScroll.enabled": false,
+    "cSpell.enabledFileTypes": {
+        "log": false
+    },
+    "dart.flutterSdkPath": "/Users/abekeishi/flutter",
+    "docker.extension.enableComposeLanguageServer": false,
+    "database-client.autoSync": true,
+    "github.copilot.nextEditSuggestions.enabled": false,
 }

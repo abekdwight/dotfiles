@@ -234,4 +234,12 @@
         "command": "-markdown.showPreview",
         "when": "!notebookEditorFocused && editorLangId == 'markdown'"
     }
+    // {
+    //     "key": "shift+enter",
+    //     "command": "workbench.action.terminal.sendSequence",
+    //     "args": {
+    //         "text": "\\\r\n"
+    //     },
+    //     "when": "terminalFocus"
+    // }
 ]
