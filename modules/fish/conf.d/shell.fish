@@ -41,3 +41,7 @@ end
 if type -q magick
     alias convHEIC="magick mogrify -monitor -format jpg *.HEIC"
 end
+
+if type -q windsurf
+    alias code="windsurf ."
+end

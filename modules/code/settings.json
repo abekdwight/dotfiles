@@ -8,7 +8,9 @@
     "workbench.editor.labelFormat": "medium",
     "workbench.tree.indent": 16,
     "workbench.editorAssociations": {
-        "*.ipynb": "jupyter.notebook.ipynb"
+        "*.copilotmd": "vscode.markdown.preview.editor",
+        "*.ipynb": "jupyter.notebook.ipynb",
+        "*.db": "default"
     },
     "markdown-preview-github-styles.colorTheme": "light",
     "explorer.confirmDelete": false,
@@ -673,7 +675,6 @@
     "window.autoDetectHighContrast": false,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "html.format.enable": false,
-    "editor.minimap.enabled": false,
     "intelephense.stubs": [
         "apache",
         "bcmath",
@@ -784,15 +785,15 @@
     ],
     "emmet.showSuggestionsAsSnippets": true,
     "roo-cline.allowedCommands": [
-        "npm test",
-        "npm install",
-        "tsc",
         "git log",
         "git diff",
         "git show",
         "npx tsc --noEmit",
         "yarn lint",
-        "yarn format:check"
+        "yarn format:check",
+        "npm test",
+        "npm install",
+        "tsc"
     ],
     "redoclyOpenAPI.user.anonymousId": "9505b682-a13b-4333-a526-2c796f540e82",
     "editor.stickyScroll.enabled": false,
@@ -803,4 +804,24 @@
     "docker.extension.enableComposeLanguageServer": false,
     "database-client.autoSync": true,
     "github.copilot.nextEditSuggestions.enabled": false,
+    "git.blame.editorDecoration.enabled": true,
+    "editor.minimap.enabled": false,
+    "markdown.preview.doubleClickToSwitchToEditor": false,
+    "markdown.preview.scrollEditorWithPreview": false,
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "editor.fontFamily": "Source Han Code JP, Menlo, Monaco, 'Courier New', monospace",
+    "roo-cline.deniedCommands": [],
 }
