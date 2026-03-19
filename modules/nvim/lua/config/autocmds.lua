@@ -8,6 +8,30 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end,
 })
 
+local function sync_wrap_for_window(win_id)
+  vim.wo[win_id].wrap = not vim.wo[win_id].diff
+end
+
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
+  callback = function(args)
+    local win_id = vim.fn.bufwinid(args.buf)
+    if win_id ~= -1 then
+      sync_wrap_for_window(win_id)
+      return
+    end
+    sync_wrap_for_window(vim.api.nvim_get_current_win())
+  end,
+})
+
+vim.api.nvim_create_autocmd('OptionSet', {
+  pattern = 'diff',
+  callback = function()
+    for _, win_id in ipairs(vim.api.nvim_list_wins()) do
+      sync_wrap_for_window(win_id)
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     local cwd = vim.fn.getcwd()
@@ -29,6 +53,13 @@ vim.api.nvim_create_autocmd('VimEnter', {
       vim.fn.chdir(git_root)
     end
   end,
+})
+
+vim.api.nvim_create_autocmd('InsertLeave', {
+  callback = function()
+    vim.fn.system({ 'im-select', 'com.apple.keylayout.USBasic' })
+  end,
+  desc = 'インサートモードからノーマルモードへ戻った際にIMEを英数に切り替え'
 })
 
 vim.api.nvim_create_autocmd('User', {

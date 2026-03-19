@@ -75,17 +75,15 @@ starter.setup({
   footer = 'Happy Coding!',
 })
 
-require('mini.pairs').setup()
-
 require('mini.surround').setup({
   mappings = {
-    add = 'sa',
-    delete = 'sd',
-    find = 'sf',
-    find_left = 'sF',
-    highlight = 'sh',
-    replace = 'sr',
-    update_n_lines = 'sn',
+    add = '<leader>sa',
+    delete = '<leader>sd',
+    find = '<leader>sf',
+    find_left = '<leader>sF',
+    highlight = '<leader>sh',
+    replace = '<leader>sr',
+    update_n_lines = '<leader>sn',
   },
   n_lines = 50,
   respect_selection_type = true,
@@ -160,6 +158,8 @@ require('mini.operators').setup({
   replace = { prefix = 'gr' },
   sort = { prefix = 'gs' },
 })
+
+vim.keymap.set('n', '<C-j>', 'gJ', { desc = 'Join lines without inserting spaces' })
 
 require('mini.align').setup()
 
@@ -333,3 +333,6 @@ require('mini.snippets').setup({
     require('mini.snippets').gen_loader.from_lang(),
   },
 })
+
+vim.keymap.set('i', '<C-j>', '<Down>', { desc = 'Move cursor down in insert mode' })
+vim.keymap.set('i', '<C-k>', '<Up>', { desc = 'Move cursor up in insert mode' })

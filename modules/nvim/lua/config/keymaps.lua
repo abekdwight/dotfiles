@@ -1,7 +1,10 @@
 local map = vim.keymap.set
+local jump2d = require('mini.jump2d')
 
 map('n', '<Esc><Esc>', '<cmd>nohlsearch<cr><esc>', { desc = '検索ハイライト解除' })
-map('n', '<leader>w', '<cmd>write<cr>', { desc = '保存' })
+map('n', '<leader>w', function()
+  jump2d.start(jump2d.builtin_opts.word_start)
+end, { desc = 'ジャンプ(単語先頭)' })
 map('n', '<leader>q', '<cmd>quit<cr>', { desc = '終了' })
 map('n', '<leader>f', function()
   require('config.formatting').format()
@@ -39,7 +42,65 @@ map('n', '<leader>/', function()
 end, { desc = '前回の検索を再開' })
 
 map('n', '<leader>e', function()
-  require('mini.files').open(vim.fn.getcwd(), true)
+  jump2d.start(jump2d.builtin_opts.word_end)
+end, { desc = 'ジャンプ(単語末尾)' })
+map('n', '<leader>fe', function()
+  local mini_files = require('mini.files')
+  local uv = vim.uv or vim.loop
+  local path = vim.api.nvim_buf_get_name(0)
+  local cwd = vim.fs.normalize(vim.fn.getcwd())
+  local start_path = cwd
+
+  if path ~= '' then
+    start_path = vim.fs.normalize(vim.fs.dirname(path))
+  end
+
+  local git_dirs = vim.fs.find('.git', { upward = true, path = start_path, limit = 1 })
+  local root = cwd
+  if #git_dirs > 0 then
+    root = vim.fs.normalize(vim.fs.dirname(git_dirs[1]))
+  end
+
+  mini_files.open(root, false)
+
+  if path == '' then
+    return
+  end
+
+  local normalized_path = vim.fs.normalize(path)
+  local path_stat = uv.fs_stat(normalized_path)
+  local target = normalized_path
+
+  if not path_stat then
+    target = vim.fs.normalize(vim.fs.dirname(normalized_path))
+  end
+
+  local stack = {}
+  local cursor = target
+  while true do
+    table.insert(stack, cursor)
+    if cursor == root then
+      break
+    end
+
+    local parent = vim.fs.normalize(vim.fs.dirname(cursor))
+    if parent == cursor then
+      return
+    end
+    cursor = parent
+  end
+
+  local branch = {}
+  for i = #stack, 1, -1 do
+    local branch_path = stack[i]
+    if uv.fs_stat(branch_path) then
+      table.insert(branch, branch_path)
+    end
+  end
+
+  if #branch > 0 then
+    mini_files.set_branch(branch)
+  end
 end, { desc = 'ファイラ(プロジェクト)', silent = true })
 map('n', '<leader>-e', function()
   local path = vim.api.nvim_buf_get_name(0)
@@ -114,10 +175,6 @@ end, { desc = '前の差分', silent = true })
 map('n', '<leader>go', function()
   require('mini.diff').toggle_overlay()
 end, { desc = '差分オーバーレイ', silent = true })
-
-map({ 'n', 'x', 'o' }, 'gj', function()
-  require('mini.jump2d').start(require('mini.jump2d').builtin_opts.single_character)
-end, { desc = '2文字ジャンプ' })
 
 map('n', '<leader>gg', '<cmd>Neogit<cr>', { desc = 'Neogit' })
 map('n', '<leader>gd', function()
