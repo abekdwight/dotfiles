@@ -17,6 +17,7 @@
 	bc = "!f() { branch | grep -v \"master\\|main\\|develop\" | xargs git branch -D }; f"
 
 [ghq]
+  root=~/.config/opencode
   root=~/.codex
   root=~/.claude
 	root=~/www
