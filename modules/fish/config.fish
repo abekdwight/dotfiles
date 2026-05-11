@@ -1,4 +1,4 @@
-if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode"
+if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode" && test "$TERM_PROGRAM" != "WarpTerminal" && test "$TERM_PROGRAM" != "zed" && not set -q CMUX_SOCKET && not set -q CMUX_SOCKET_PATH
     tmux_attach_session_if_needed
 end
 
@@ -24,3 +24,19 @@ fish_add_path $JAVA_HOME/bin
 
 # C++コンパイラフラグ設定
 set -x CPPFLAGS "-I/opt/homebrew/opt/openjdk@17/include"
+fish_add_path "$HOME/.local/bin"
+fish_add_path $HOME/.local/bin
+
+# Added by Windsurf
+fish_add_path /Users/abekeishi/.codeium/windsurf/bin
+
+# Added by Antigravity
+fish_add_path /Users/abekeishi/.antigravity/antigravity/bin
+
+# Added by WTP
+wtp shell-init fish | source
+
+# opencode
+fish_add_path /Users/abekeishi/.opencode/bin
+
+status --is-interactive; and fish_user_key_bindings

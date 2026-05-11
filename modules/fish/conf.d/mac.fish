@@ -1,7 +1,7 @@
 if test (uname) = "Darwin"
     # [ config ]
     # open default editor
-    set -x EDITOR /usr/local/bin/code
+    set -gx EDITOR nvim
 
     # brew setting
     set -x HOMEBREW_NO_AUTO_UPDATE 1

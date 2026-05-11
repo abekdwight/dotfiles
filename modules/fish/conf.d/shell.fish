@@ -11,9 +11,10 @@ if type -q bat
     alias cat 'bat'
 end
 
-if type -q fd
-    alias find 'fd'
-end
+# fd をfindにエイリアスするのはAI時代に相性が悪すぎる。
+# if type -q fd
+#     alias find 'fd'
+# end
 
 if type -q dog
     alias dig 'dog'

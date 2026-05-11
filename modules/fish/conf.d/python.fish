@@ -1,13 +1,14 @@
 # for pyenv
-if type -q pyenv
-    # Add pyenv executable to PATH by running
-    # the following interactively:
+if test -d "$HOME/.pyenv"
+    set -gx PYENV_ROOT "$HOME/.pyenv"
+    fish_add_path "$PYENV_ROOT/bin"
+    fish_add_path "$PYENV_ROOT/shims"
+end
 
-    set -Ux PYENV_ROOT $HOME/.pyenv
-    set -U fish_user_paths $PYENV_ROOT/shims $fish_user_paths
-
-    # Load pyenv automatically by appending
-    # the following to ~/.config/fish/config.fish:
-
-    pyenv init - | source
+# for browser-use
+if test -d "$HOME/.browser-use/bin"
+    fish_add_path "$HOME/.browser-use/bin"
+end
+if test -d "$HOME/.browser-use-env/bin"
+    fish_add_path "$HOME/.browser-use-env/bin"
 end
