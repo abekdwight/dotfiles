@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PLUGIN_DIR="${TMUX_OPEN_MD_PLUGIN_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+LIB_DIR="${PLUGIN_DIR}/lib/tmux-open-md"
+
+source "${LIB_DIR}/config.sh"
+source "${LIB_DIR}/tmux.sh"
+source "${LIB_DIR}/extract.sh"
+source "${LIB_DIR}/resolve.sh"
+source "${LIB_DIR}/select.sh"
+source "${LIB_DIR}/open.sh"
+source "${LIB_DIR}/diagnostics.sh"
+
+capture_file=""
+cwd="$(pwd)"
+print_candidates="0"
+pane_id="${TMUX_OPEN_MD_PANE_ID:-}"
+base_path="${TMUX_OPEN_MD_BASE_PATH:-}"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --capture-file)
+      capture_file="$2"
+      shift 2
+      ;;
+    --cwd)
+      cwd="$2"
+      shift 2
+      ;;
+    --print-candidates)
+      print_candidates="1"
+      shift
+      ;;
+    --pane-id)
+      pane_id="$2"
+      shift 2
+      ;;
+    --base-path)
+      base_path="$2"
+      shift 2
+      ;;
+    *)
+      printf 'tmux-open-md: unknown argument: %s\n' "$1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+case "${pane_id}" in
+  *'#{'*) pane_id="" ;;
+esac
+
+case "${base_path}" in
+  *'#{'*) base_path="" ;;
+esac
+
+load_config
+require_core_commands
+
+work_dir="$(mktemp -d -t tmux-open-md.XXXXXX)"
+cleanup() { rm -rf "${work_dir}" >/dev/null 2>&1 || true; }
+trap cleanup EXIT
+
+sources_file="${work_dir}/sources.tsv"
+roots_file="${work_dir}/roots.txt"
+refs_file="${work_dir}/references.tsv"
+resolved_file="${work_dir}/resolved.tsv"
+candidates_file="${work_dir}/candidates.tsv"
+
+if [ -n "${capture_file}" ]; then
+  build_fixture_observation "${capture_file}" "${cwd}" "${work_dir}" "${sources_file}" "${roots_file}"
+else
+  if [[ -z "${pane_id}" || "${pane_id}" != %* ]]; then
+    printf 'tmux-open-md: 対象 tmux pane を特定できません\n' >&2
+    exit 1
+  fi
+  build_tmux_observation "${pane_id}" "${base_path}" "${TMUX_OPEN_MD_HISTORY_LINES}" "${work_dir}" "${sources_file}" "${roots_file}"
+fi
+
+extract_references "${sources_file}" > "${refs_file}"
+resolve_references "${refs_file}" "${roots_file}" > "${resolved_file}"
+rank_candidates "${resolved_file}" > "${candidates_file}"
+
+if [ "${TMUX_OPEN_MD_DEBUG}" != "0" ]; then
+  write_debug_log "${TMUX_OPEN_MD_DEBUG_LOG}" "${sources_file}" "${roots_file}" "${refs_file}" "${candidates_file}"
+fi
+
+if [ "${print_candidates}" = "1" ]; then
+  cut -f 5- "${candidates_file}"
+  exit 0
+fi
+
+if [ ! -s "${candidates_file}" ]; then
+  print_no_candidates "${sources_file}" "${roots_file}" "${refs_file}"
+  exit 0
+fi
+
+selected_path="$(select_candidate "${candidates_file}" "${TMUX_OPEN_MD_SELECTOR}")"
+if [ -z "${selected_path}" ]; then
+  exit 0
+fi
+
+require_open_command
+open_markdown "${selected_path}" "${TMUX_OPEN_MD_APP}"
