@@ -6,10 +6,10 @@ make nvim-clean
 
 # install
 make nvim-install
-
-# run script after nvim bootstrap for coc.nvim
-call coc#util#install()
 ```
+
+初回起動時に mini.deps がプラグインを取得します。LSP は mason.nvim 経由で自動導入されます。
+必要に応じて `:Mason` で状況確認や追加インストールを行ってください。
 
 ## fish install and clean
 
@@ -34,6 +34,19 @@ make tmux-clean
 make tmux-install
 # Press `prefix` + `I` to install the plugins in the tmux-session.
 ```
+
+## warp install and clean
+
+```bash
+# clean
+make warp-clean
+
+# install
+make warp-install
+```
+
+Warp の通常設定は `~/.warp/settings.toml`、キーバインドは `~/.warp/keybindings.yaml` にシンボリックリンクされます。
+`settings.toml` は保存時に反映されますが、`keybindings.yaml` は Warp の再起動が必要です。
 
 ## homebrew backup
 

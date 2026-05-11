@@ -20,7 +20,7 @@ This is a personal dotfiles repository that manages development environment conf
 - `make dot-install` / `make dot-clean` - Install/remove dotfiles (symlinks)
 
 ### Special Post-Install Steps
-- **nvim**: After installation, run `call coc#util#install()` in nvim for coc.nvim setup
+- **nvim**: First launch will install plugins via mini.deps; use `:Mason` if you want to confirm or add LSP servers
 - **tmux**: Press `prefix` + `I` (where prefix is `Ctrl + q`) to install plugins
 
 ### Homebrew Package Management
