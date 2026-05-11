@@ -21,7 +21,7 @@ $(foreach source, $(DOT_SOURCES), \
 
 .PHONY: dot-clean
 dot-clean:
-	rm -f $(DOT_TARGETS)
+	rm -f $(filter-out dot-install,$(DOT_TARGETS))
 
 .PHONY: dot-install
-dot-install: $(DOT_TARGETS)
+dot-install: $(filter-out dot-install,$(DOT_TARGETS))
