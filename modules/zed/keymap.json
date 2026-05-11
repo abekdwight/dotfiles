@@ -1,0 +1,143 @@
+// Managed by dotfiles/modules/zed.
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      // "shift shift": "file_finder::Toggle"
+    },
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-cmd-1 ctrl-alt-cmd-a": [
+        "projects::OpenRemote",
+        {
+          "from_existing_connection": true,
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-cmd-shift-o": [
+        "projects::OpenRemote",
+        {
+          "from_existing_connection": true,
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-cmd-1 ctrl-alt-cmd-b": [
+        "projects::OpenRemote",
+        {
+          "from_existing_connection": false,
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-cmd-o": [
+        "projects::OpenRemote",
+        {
+          "from_existing_connection": false,
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-shift-p": [
+        "projects::OpenRecent",
+        {
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-r": [
+        "projects::OpenRecent",
+        {
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-shift-p": [
+        "projects::OpenRecent",
+        {
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "alt-cmd-o": [
+        "projects::OpenRecent",
+        {
+          "create_new_window": false,
+        },
+      ],
+    },
+  },
+  {
+    "context": "NotebookEditor",
+    "bindings": {
+      "cmd-shift-r": "notebook::RestartKernel",
+    },
+  },
+  {
+    "context": "NotebookEditor > Editor",
+    "bindings": {
+      "cmd-shift-r": "notebook::RestartKernel",
+    },
+  },
+  {
+    "context": "Workspace && !Terminal",
+    "bindings": {
+      "cmd-shift-r": "task::Spawn",
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-shift-w": "git::Worktree",
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-cmd-w": "git::Worktree",
+    },
+  },
+]

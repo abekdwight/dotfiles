@@ -1,0 +1,91 @@
+// Managed by dotfiles/modules/zed.
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "diff_view_style": "split",
+  "git_panel": {
+    "tree_view": true,
+  },
+  "disable_ai": true,
+  "confirm_quit": true,
+  "proxy": "",
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Material Icon Theme",
+  },
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "Ayu Dark",
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "terminal": {
+    "dock": "left",
+    "font_family": "Hack Nerd Font Mono",
+    "font_fallbacks": ["monospace"],
+  },
+  "git": {
+    "inline_blame": {
+      "enabled": true,
+    },
+  },
+  "preview_tabs": {
+    "enabled": false,
+  },
+  "relative_line_numbers": "enabled",
+  "sticky_scroll": {
+    "enabled": false,
+  },
+  "gutter": {
+    "line_numbers": true,
+  },
+  "minimap": {
+    "show": "never",
+  },
+  "buffer_font_fallbacks": ["Menlo", "Monaco", "Courier New", "monospace"],
+  "buffer_font_family": "Source Han Code JP",
+  "file_types": {
+    "json": ["*.side"],
+    "javascript": ["*.js"],
+    "pgsql": ["*.sql"],
+    "liquid": ["*.liquid"],
+    "ruby": ["*.jb"],
+    "viml": ["*.vim"],
+    "yaml": ["*.neon"],
+    "php": ["*.stub"],
+    "log": ["*.log"],
+  },
+  "colorize_brackets": false,
+  "auto_indent_on_paste": true,
+  "use_on_type_format": true,
+  "show_edit_predictions": true,
+  "wrap_guides": [120],
+  "tab_size": 2,
+  "agent_servers": {
+    "opencode": {
+      "type": "registry",
+    },
+    "claude-acp": {
+      "type": "registry",
+    },
+    "codex-acp": {
+      "type": "registry",
+    },
+  },
+  "base_keymap": "VSCode",
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 11.0,
+}
