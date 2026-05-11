@@ -1,0 +1,8 @@
+name = "New tab: t-s-i"
+
+[[panes]]
+id = "main"
+type = "terminal"
+directory = "/Users/abekeishi/ghq/github.com/t-s-i"
+
+[params]

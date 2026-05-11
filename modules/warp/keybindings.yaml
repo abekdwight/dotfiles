@@ -1,0 +1,46 @@
+---
+# Managed by dotfiles/modules/warp.
+# Warp reads ~/.warp/keybindings.yaml on restart.
+# Warp does not currently model tmux-style prefix sequences, so these use direct chords.
+
+# Pane navigation: tmux-like h/j/k/l movement without stealing Ctrl-q from fish/tmux.
+"pane_group:navigate_left": ctrl-alt-h
+"pane_group:navigate_down": ctrl-alt-j
+"pane_group:navigate_up": ctrl-alt-k
+"pane_group:navigate_right": ctrl-alt-l
+"pane_group:navigate_prev": ctrl-alt-[
+"pane_group:navigate_next": ctrl-alt-]
+
+# Pane creation: approximate tmux prefix+% and prefix+\" as direct chords.
+"pane_group:add_right": ctrl-alt-\
+"pane_group:add_down": ctrl-alt--
+"pane_group:toggle_maximize_pane": ctrl-alt-enter
+
+# Pane resize: uppercase H/J/K/L mirrors tmux/vim directional muscle memory.
+"pane_group:resize_left": ctrl-alt-shift-H
+"pane_group:resize_down": ctrl-alt-shift-J
+"pane_group:resize_up": ctrl-alt-shift-K
+"pane_group:resize_right": ctrl-alt-shift-L
+
+# Tabs: approximate tmux windows.
+"workspace:open_new_tab": ctrl-alt-c
+"workspace:reopen_closed_tab": ctrl-alt-shift-C
+"workspace:activate_prev_tab": ctrl-alt-p
+"workspace:activate_next_tab": ctrl-alt-n
+"workspace:move_tab_left": ctrl-alt-shift-<
+"workspace:move_tab_right": ctrl-alt-shift->
+
+# Disable default bindings that conflict or are unwanted.
+"code_view:close_saved_tabs": none
+"editor_view:backspace": none
+
+# Keep useful Warp defaults that overlap with the existing fish/tmux workflow.
+"workspace:show_command_search": ctrl-r
+"workspace:toggle_command_palette": cmd-p
+"terminal:clear_blocks": cmd-k
+"terminal:copy": cmd-c
+"terminal:paste": cmd-v
+"terminal:find": cmd-f
+"terminal:focus_input": cmd-l
+"workspace:show_settings_modal": cmd-,
+"workspace:show_keybinding_settings": ctrl-cmd-k
