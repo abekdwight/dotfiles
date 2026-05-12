@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+pane_count=$(tmux list-panes | wc -l | tr -d ' ')
+
+if [ "$pane_count" -eq 1 ]; then
+  tmux split-window -h -p 25 -c '#{pane_current_path}'
+  tmux select-pane -L
+  tmux split-window -v -p 20 -c '#{pane_current_path}'
+  tmux select-pane -U
+  exit 0
+fi
+
+# ペインが2枚以上: top (pane 0) 以外を閉じる
+# pane 0 以外でシェル(idle)でないプロセスが動いていないか検査
+running_panes=""
+while IFS= read -r line; do
+  pane_id=$(echo "$line" | cut -d' ' -f1)
+  pane_cmd=$(echo "$line" | cut -d' ' -f2-)
+  pane_index=$(tmux display-message -p -t "$pane_id" '#{pane_index}')
+  if [ "$pane_index" = "0" ]; then
+    continue
+  fi
+  case "$pane_cmd" in
+    zsh|fish|bash|sh|tmux) ;;
+    *)
+      pane_title=$(tmux display-message -p -t "$pane_id" '#{pane_title}')
+      if [ -n "$pane_title" ]; then
+        running_panes="${running_panes} pane ${pane_index}: ${pane_cmd} (${pane_title})"
+      else
+        running_panes="${running_panes} pane ${pane_index}: ${pane_cmd}"
+      fi
+      ;;
+  esac
+done < <(tmux list-panes -F '#{pane_id} #{pane_current_command}')
+
+if [ -n "$running_panes" ]; then
+  tmux display-message -d 0 "⚠ Running: ${running_panes}"
+  tmux command-prompt -p "Close other panes? (y/n)" \
+    "run-shell 'case \"%%\" in y|Y) tmux kill-pane -a -t 0 ;; esac'"
+else
+  tmux kill-pane -a -t 0
+fi

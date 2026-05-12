@@ -2,6 +2,7 @@ TMUX_PLUGIN_DIR = ~/.tmux/plugins
 TMUX_DIR = $(TMUX_PLUGIN_DIR)/tpm
 TMUX_GITHUB_URL = https://github.com/tmux-plugins/tpm
 TMUX_OPEN_MD_PLUGIN_DIR = $(TMUX_PLUGIN_DIR)/tmux-open-md
+TMUX_LAYOUT_TOGGLE_PLUGIN_DIR = $(TMUX_PLUGIN_DIR)/tmux-layout-toggle
 SELF_TMUX_DIR = $(MODULE_DIR)/tmux
 
 TMUX_CLEAN_TARGETS += tmux-clean
@@ -11,8 +12,9 @@ TMUX_TARGETS += tmux-install
 tmux-clean:
 	rm -fr $(TMUX_DIR)
 	rm -fr $(TMUX_OPEN_MD_PLUGIN_DIR)
+	rm -fr $(TMUX_LAYOUT_TOGGLE_PLUGIN_DIR)
 
-tmux-install: $(TMUX_DIR) $(TMUX_OPEN_MD_PLUGIN_DIR)
+tmux-install: $(TMUX_DIR) $(TMUX_OPEN_MD_PLUGIN_DIR) $(TMUX_LAYOUT_TOGGLE_PLUGIN_DIR)
 
 $(TMUX_PLUGIN_DIR):
 	mkdir -p $(TMUX_PLUGIN_DIR)
@@ -23,3 +25,7 @@ $(TMUX_DIR): $(TMUX_PLUGIN_DIR)
 $(TMUX_OPEN_MD_PLUGIN_DIR): $(TMUX_PLUGIN_DIR)
 	rm -rf $(TMUX_OPEN_MD_PLUGIN_DIR)
 	ln -s $(SELF_TMUX_DIR)/plugins/tmux-open-md $(TMUX_OPEN_MD_PLUGIN_DIR)
+
+$(TMUX_LAYOUT_TOGGLE_PLUGIN_DIR): $(TMUX_PLUGIN_DIR)
+	rm -rf $(TMUX_LAYOUT_TOGGLE_PLUGIN_DIR)
+	ln -s $(SELF_TMUX_DIR)/plugins/tmux-layout-toggle $(TMUX_LAYOUT_TOGGLE_PLUGIN_DIR)
