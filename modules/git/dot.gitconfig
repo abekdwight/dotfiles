@@ -60,3 +60,5 @@
 	required = true
 [blame]
 	ignoreRevsFile = .git-blame-ignore-revs
+[coderabbit]
+	machineId = cli/c05e4d25cd124d38b0f9db8bec032c8c

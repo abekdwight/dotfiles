@@ -4,3 +4,5 @@
 
 tmp/*
 !tmp/.gitkeep
+
+modules/nvim/lua/config/command_palette_source.lua

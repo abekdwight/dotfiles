@@ -1,5 +1,8 @@
 local map = vim.keymap.set
 local jump2d = require('mini.jump2d')
+local command_palette = require('config.command_palette_core')
+
+command_palette.setup()
 
 map('n', '<Esc><Esc>', '<cmd>nohlsearch<cr><esc>', { desc = '検索ハイライト解除' })
 map('n', '<leader>w', function()
@@ -37,6 +40,7 @@ end, { desc = 'レジスタ検索' })
 map('n', '<leader>ft', function()
   require('mini.pick').builtin.grep_live({ pattern = 'TODO|FIXME|HACK|NOTE' })
 end, { desc = 'TODO検索' })
+map('n', '<leader>p', '<cmd>CommandPalette<cr>', { desc = 'コマンドパレット' })
 map('n', '<leader>/', function()
   require('mini.pick').builtin.resume()
 end, { desc = '前回の検索を再開' })
