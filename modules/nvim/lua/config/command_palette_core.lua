@@ -1,5 +1,7 @@
 local M = {}
 
+local source_sections  -- forward declaration; assigned after collection functions
+
 local valid_actions = {
   execute = true,
   edit = true,
@@ -374,10 +376,11 @@ local function sorted_copy(values)
 end
 
 local function empty_palette()
-  return {
-    commands = {},
-    builtin_keys = {},
-  }
+  local palette = {}
+  for _, section in ipairs(source_sections) do
+    palette[section.name] = {}
+  end
+  return palette
 end
 
 local function file_exists(path)
@@ -403,19 +406,19 @@ local function normalize_source(source)
     error('command_palette_source.lua がテーブルを返していません', 0)
   end
 
-  local commands = source.commands or source
-  local builtin_keys = source.builtin_keys or {}
-  if type(commands) ~= 'table' then
-    error('command_palette_source.lua の commands がテーブルではありません', 0)
+  local result = {}
+  for _, section in ipairs(source_sections) do
+    local section_data = source[section.name]
+    -- Backward compat: old source files had commands as the root table
+    if section.name == 'commands' and section_data == nil and source.commands == nil then
+      section_data = source
+    end
+    if type(section_data) ~= 'table' then
+      section_data = {}
+    end
+    result[section.name] = section_data
   end
-  if type(builtin_keys) ~= 'table' then
-    error('command_palette_source.lua の builtin_keys がテーブルではありません', 0)
-  end
-
-  return {
-    commands = commands,
-    builtin_keys = builtin_keys,
-  }
+  return result
 end
 
 local function normalize_palette(palette)
@@ -423,20 +426,19 @@ local function normalize_palette(palette)
     return empty_palette()
   end
 
-  local commands = palette.commands
-  if type(commands) ~= 'table' then
-    commands = palette[1] ~= nil and palette or {}
+  local result = {}
+  for _, section in ipairs(source_sections) do
+    local section_data = palette[section.name]
+    -- Backward compat: old palette files had commands as the root table
+    if section.name == 'commands' and section_data == nil and palette.commands == nil then
+      section_data = palette
+    end
+    if type(section_data) ~= 'table' then
+      section_data = {}
+    end
+    result[section.name] = section_data
   end
-
-  local builtin_keys = palette.builtin_keys
-  if type(builtin_keys) ~= 'table' then
-    builtin_keys = {}
-  end
-
-  return {
-    commands = commands,
-    builtin_keys = builtin_keys,
-  }
+  return result
 end
 
 local function read_source_file(path)
@@ -855,36 +857,6 @@ local function read_builtin_key_source(commands)
   return source
 end
 
-local function format_source(commands, builtin_keys)
-  local lines = {
-    "-- Generated conversion candidates from vim.fn.getcompletion('', 'command') and $VIMRUNTIME/doc/index.txt.",
-    'return {',
-    '  commands = {',
-  }
-
-  for _, value in ipairs(commands) do
-    table.insert(lines, ('    %q,'):format(value))
-  end
-
-  table.insert(lines, '  },')
-  table.insert(lines, '  builtin_keys = {')
-  for _, item in ipairs(builtin_keys) do
-    table.insert(lines, '    {')
-    table.insert(lines, ('      mode = %q,'):format(item.mode))
-    table.insert(lines, ('      key = %q,'):format(item.key))
-    table.insert(lines, ('      tag = %q,'):format(item.tag))
-    if item.source_command ~= nil then
-      table.insert(lines, ('      source_command = %q,'):format(item.source_command))
-    end
-    table.insert(lines, ('      description = %q,'):format(item.description))
-    table.insert(lines, '    },')
-  end
-
-  table.insert(lines, '  },')
-  table.insert(lines, '}')
-  return lines
-end
-
 local function normalize_lhs(lhs)
   local leader = vim.g.mapleader or '\\'
   local localleader = vim.g.maplocalleader or leader
@@ -986,6 +958,204 @@ local function keymap_index(entries)
   end
 
   return index
+end
+
+local function is_command_rhs(rhs)
+  if not is_non_empty_string(rhs) then
+    return false
+  end
+  return rhs:match('^<Cmd>') ~= nil or rhs:match('^:') ~= nil
+end
+
+local function read_user_keymap_source()
+  local entries = {}
+  local seen = {}
+  for _, mode in ipairs(keymap_modes) do
+    local maps = vim.api.nvim_get_keymap(mode)
+    vim.list_extend(maps, vim.api.nvim_buf_get_keymap(0, mode))
+    for _, mapping in ipairs(maps) do
+      local lhs = mapping.lhs
+      if is_non_empty_string(lhs) and is_non_empty_string(mapping.desc) then
+        local key = normalize_lhs(lhs)
+        if not key:find('<Plug>', 1, true)
+          and not key:find('<SNR>', 1, true)
+          and not is_command_rhs(mapping.rhs) then
+          local mode_key = (mapping.mode or mode) .. '\t' .. key
+          if not seen[mode_key] then
+            seen[mode_key] = true
+            table.insert(entries, {
+              mode = mapping.mode or mode,
+              key = key,
+              desc = mapping.desc,
+            })
+          end
+        end
+      end
+    end
+  end
+  table.sort(entries, function(a, b)
+    if a.mode ~= b.mode then
+      return a.mode < b.mode
+    end
+    return a.key < b.key
+  end)
+  return entries
+end
+
+-- Source section registry: each section defines how entries are collected,
+-- serialized to the source file, identified for coverage comparison, and
+-- reported.  Adding a new source type means adding one entry here.
+source_sections = {
+  {
+    name = 'commands',
+    label = 'Exコマンド',
+    collect = function()
+      return sorted_copy(vim.fn.getcompletion('', 'command'))
+    end,
+    source_entry_id = function(entry)
+      return entry
+    end,
+    source_entry_label = function(entry)
+      return entry
+    end,
+    palette_entry_id = function(entry)
+      if type(entry) ~= 'table' or not is_non_empty_string(entry.command) then
+        return nil
+      end
+      return entry.command
+    end,
+    -- Serialization for source file
+    write_header = function(lines)
+      table.insert(lines, '  commands = {')
+    end,
+    write_entry = function(lines, entry)
+      table.insert(lines, ('    %q,'):format(entry))
+    end,
+    write_footer = function(lines)
+      table.insert(lines, '  },')
+    end,
+  },
+  {
+    name = 'builtin_keys',
+    label = 'index.txt 組み込みキー',
+    collect = function(source)
+      local commands = (source or {}).commands or {}
+      return read_builtin_key_source(command_lookup(commands))
+    end,
+    source_entry_id = function(entry)
+      return table.concat({ entry.mode or '', entry.tag or '', entry.key or '' }, '\t')
+    end,
+    source_entry_label = function(entry)
+      local values = { entry.source_command, entry.mode, entry.key, entry.tag }
+      local label = table.concat(vim.tbl_filter(is_non_empty_string, values), ' ')
+      if label ~= '' then
+        return label
+      end
+      return table.concat({ entry.mode or '', entry.tag or '', entry.key or '' }, '\t')
+    end,
+    palette_entry_id = function(entry)
+      if type(entry) ~= 'table' then
+        return nil
+      end
+      if not is_non_empty_string(entry.mode) or not is_non_empty_string(entry.tag) or not is_non_empty_string(entry.key) then
+        return nil
+      end
+      return table.concat({ entry.mode, entry.tag, entry.key }, '\t')
+    end,
+    write_header = function(lines)
+      table.insert(lines, '  builtin_keys = {')
+    end,
+    write_entry = function(lines, entry)
+      table.insert(lines, '    {')
+      table.insert(lines, ('      mode = %q,'):format(entry.mode))
+      table.insert(lines, ('      key = %q,'):format(entry.key))
+      table.insert(lines, ('      tag = %q,'):format(entry.tag))
+      if entry.source_command ~= nil then
+        table.insert(lines, ('      source_command = %q,'):format(entry.source_command))
+      end
+      table.insert(lines, ('      description = %q,'):format(entry.description))
+      table.insert(lines, '    },')
+    end,
+    write_footer = function(lines)
+      table.insert(lines, '  },')
+    end,
+  },
+  {
+    name = 'user_keymaps',
+    label = 'ユーザーキーマップ',
+    collect = function()
+      return read_user_keymap_source()
+    end,
+    source_entry_id = function(entry)
+      return table.concat({ entry.mode, entry.key }, '\t')
+    end,
+    source_entry_label = function(entry)
+      return ('%s %s %s'):format(entry.mode, entry.key, entry.desc or '')
+    end,
+    palette_entry_id = function(entry)
+      if type(entry) ~= 'table' then
+        return nil
+      end
+      if not is_non_empty_string(entry.mode) or not is_non_empty_string(entry.key) then
+        return nil
+      end
+      return table.concat({ entry.mode, entry.key }, '\t')
+    end,
+    write_header = function(lines)
+      table.insert(lines, '  user_keymaps = {')
+    end,
+    write_entry = function(lines, entry)
+      table.insert(lines, '    {')
+      table.insert(lines, ('      mode = %q,'):format(entry.mode))
+      table.insert(lines, ('      key = %q,'):format(entry.key))
+      table.insert(lines, ('      desc = %q,'):format(entry.desc))
+      table.insert(lines, '    },')
+    end,
+    write_footer = function(lines)
+      table.insert(lines, '  },')
+    end,
+  },
+}
+
+local function source_section_by_name(name)
+  for _, section in ipairs(source_sections) do
+    if section.name == name then
+      return section
+    end
+  end
+  return nil
+end
+
+local function section_collect(collect_fn, source)
+  if type(collect_fn) ~= 'function' then
+    return {}
+  end
+  local ok, result = pcall(collect_fn, source)
+  if not ok then
+    return {}
+  end
+  return result or {}
+end
+
+local function format_source(sections)
+  local lines = {
+    '-- Generated conversion candidates from vim.fn.getcompletion(\'\', \'command\'), $VIMRUNTIME/doc/index.txt, and user keymaps.',
+    'return {',
+  }
+
+  for _, section in ipairs(source_sections) do
+    local entries = sections[section.name]
+    if type(entries) == 'table' then
+      section.write_header(lines)
+      for _, entry in ipairs(entries) do
+        section.write_entry(lines, entry)
+      end
+      section.write_footer(lines)
+    end
+  end
+
+  table.insert(lines, '}')
+  return lines
 end
 
 local function palette_commands(palette)
@@ -1110,194 +1280,161 @@ function M.current_commands()
 end
 
 function M.current_source()
-  local commands = M.current_commands()
-  return {
-    commands = commands,
-    builtin_keys = read_builtin_key_source(command_lookup(commands)),
-  }
+  local source = {}
+  for _, section in ipairs(source_sections) do
+    source[section.name] = section_collect(section.collect, source)
+  end
+  return source
 end
 
 function M.write_source_file(path)
   path = path or source_file_path()
   vim.fn.mkdir(vim.fn.fnamemodify(path, ':h'), 'p')
   local source = M.current_source()
-  vim.fn.writefile(format_source(source.commands, source.builtin_keys), path)
+  vim.fn.writefile(format_source(source), path)
   return path
 end
 
 function M.coverage(opts)
   opts = opts or {}
   local source = read_source_file(opts.source_path)
-  local source_commands = source.commands
-  local source_builtin_keys = source.builtin_keys
   local palette = read_palette_file(opts.palette_path)
-  local entries = palette_commands(palette)
-  local builtin_entries = palette_builtin_keys(palette)
-  local source_lookup = {}
-  local entry_counts = {}
-  local builtin_source_lookup = {}
-  local builtin_entry_lookup = {}
-  local builtin_key_counts = {}
+
   local result = {
-    total_commands = #source_commands,
-    registered_commands = #entries,
-    missing_commands = {},
-    extra_commands = {},
-    missing_builtin_keys = {},
-    extra_builtin_keys = {},
+    sections = {},
     missing_label_count = 0,
     missing_description_count = 0,
     missing_category_count = 0,
     missing_aliases_count = 0,
     missing_action_count = 0,
     invalid_action_count = 0,
-    duplicate_commands = {},
     missing_key_mode_count = 0,
     missing_key_value_count = 0,
-    duplicate_builtin_keys = {},
   }
 
-  for _, command in ipairs(source_commands) do
-    source_lookup[command] = true
-  end
+  for _, section in ipairs(source_sections) do
+    local source_entries = source[section.name] or {}
+    local palette_entries = palette[section.name] or {}
 
-  for _, key in ipairs(source_builtin_keys) do
-    if is_non_empty_string(key.mode) and is_non_empty_string(key.tag) and is_non_empty_string(key.key) then
-      builtin_source_lookup[builtin_key_source_id(key)] = key
-    end
-  end
-
-  local function check_required_fields(entry)
-    if type(entry) ~= 'table' then
-      result.missing_label_count = result.missing_label_count + 1
-      result.missing_description_count = result.missing_description_count + 1
-      result.missing_category_count = result.missing_category_count + 1
-      result.missing_aliases_count = result.missing_aliases_count + 1
-      result.missing_action_count = result.missing_action_count + 1
-      return
+    -- Build lookup from source entries
+    local source_lookup = {}
+    for _, entry in ipairs(source_entries) do
+      source_lookup[section.source_entry_id(entry)] = entry
     end
 
-    if not is_non_empty_string(entry.label) then
-      result.missing_label_count = result.missing_label_count + 1
-    end
-    if not is_non_empty_string(entry.description) then
-      result.missing_description_count = result.missing_description_count + 1
-    end
-    if not is_non_empty_string(entry.category) then
-      result.missing_category_count = result.missing_category_count + 1
-    end
-    if type(entry.aliases) ~= 'table' or #entry.aliases == 0 then
-      result.missing_aliases_count = result.missing_aliases_count + 1
-    end
-    if not is_non_empty_string(entry.action) then
-      result.missing_action_count = result.missing_action_count + 1
-    elseif not valid_actions[entry.action] then
-      result.invalid_action_count = result.invalid_action_count + 1
-    end
-  end
+    local palette_lookup = {}
+    local entry_counts = {}
+    local section_missing = {}
+    local section_extra = {}
+    local section_duplicates = {}
 
-  for _, entry in ipairs(entries) do
-    if type(entry) == 'table' and is_non_empty_string(entry.command) then
-      entry_counts[entry.command] = (entry_counts[entry.command] or 0) + 1
-    end
+    for _, entry in ipairs(palette_entries) do
+      -- Required fields validation (shared across all section types)
+      if type(entry) ~= 'table' then
+        result.missing_label_count = result.missing_label_count + 1
+        result.missing_description_count = result.missing_description_count + 1
+        result.missing_category_count = result.missing_category_count + 1
+        result.missing_aliases_count = result.missing_aliases_count + 1
+        result.missing_action_count = result.missing_action_count + 1
+      else
+        if not is_non_empty_string(entry.label) then
+          result.missing_label_count = result.missing_label_count + 1
+        end
+        if not is_non_empty_string(entry.description) then
+          result.missing_description_count = result.missing_description_count + 1
+        end
+        if not is_non_empty_string(entry.category) then
+          result.missing_category_count = result.missing_category_count + 1
+        end
+        if type(entry.aliases) ~= 'table' or #entry.aliases == 0 then
+          result.missing_aliases_count = result.missing_aliases_count + 1
+        end
+        if not is_non_empty_string(entry.action) then
+          result.missing_action_count = result.missing_action_count + 1
+        elseif not valid_actions[entry.action] then
+          result.invalid_action_count = result.invalid_action_count + 1
+        end
 
-    check_required_fields(entry)
-    if type(entry) == 'table' and is_non_empty_string(entry.command) and not source_lookup[entry.command] then
-      table.insert(result.extra_commands, entry.command)
-    end
+        -- Key validation on entry.keys (primarily for commands section)
+        if type(entry.keys) == 'table' then
+          for _, key in ipairs(entry.keys) do
+            if type(key) ~= 'table' or not is_non_empty_string(key.mode) then
+              result.missing_key_mode_count = result.missing_key_mode_count + 1
+            end
+            if type(key) ~= 'table' or not is_non_empty_string(key.key) then
+              result.missing_key_value_count = result.missing_key_value_count + 1
+            end
+          end
+        end
 
-    if type(entry) == 'table' and type(entry.keys) == 'table' then
-      for _, key in ipairs(entry.keys) do
-        if type(key) ~= 'table' or not is_non_empty_string(key.mode) then
+        -- Key validation on entry itself (for builtin_keys, user_keymaps)
+        if not is_non_empty_string(entry.mode) and is_non_empty_string(entry.key) then
           result.missing_key_mode_count = result.missing_key_mode_count + 1
         end
-        if type(key) ~= 'table' or not is_non_empty_string(key.key) then
+        if is_non_empty_string(entry.mode) and not is_non_empty_string(entry.key) then
           result.missing_key_value_count = result.missing_key_value_count + 1
         end
+      end
 
+      -- Match against source
+      local id = section.palette_entry_id(entry)
+      if id then
+        entry_counts[id] = (entry_counts[id] or 0) + 1
+        palette_lookup[id] = true
+        if not source_lookup[id] then
+          table.insert(section_extra, section.source_entry_label(entry))
+        end
       end
     end
-  end
 
-  for _, entry in ipairs(builtin_entries) do
-    check_required_fields(entry)
-    if type(entry) ~= 'table' or not is_non_empty_string(entry.mode) then
-      result.missing_key_mode_count = result.missing_key_mode_count + 1
-    end
-    if type(entry) ~= 'table' or not is_non_empty_string(entry.tag) then
-      table.insert(result.extra_builtin_keys, type(entry) == 'table' and builtin_key_source_id(entry) or '')
-    end
-    if type(entry) ~= 'table' or not is_non_empty_string(entry.key) then
-      result.missing_key_value_count = result.missing_key_value_count + 1
-    end
-
-    if type(entry) == 'table'
-      and is_non_empty_string(entry.mode)
-      and is_non_empty_string(entry.tag)
-      and is_non_empty_string(entry.key)
-    then
-      local id = builtin_key_source_id(entry)
-      builtin_entry_lookup[id] = true
-      builtin_key_counts[id] = (builtin_key_counts[id] or 0) + 1
-      if builtin_source_lookup[id] == nil then
-        table.insert(result.extra_builtin_keys, id)
+    -- Missing: in source but not in palette
+    for id, src_entry in pairs(source_lookup) do
+      if not palette_lookup[id] then
+        table.insert(section_missing, section.source_entry_label(src_entry))
       end
     end
+
+    -- Duplicates
+    for id, count in pairs(entry_counts) do
+      if count > 1 then
+        table.insert(section_duplicates, id)
+      end
+    end
+
+    table.sort(section_missing)
+    table.sort(section_extra)
+    table.sort(section_duplicates)
+
+    result.sections[section.name] = {
+      total = #source_entries,
+      registered = #palette_entries,
+      missing = section_missing,
+      missing_count = #section_missing,
+      extra = section_extra,
+      extra_count = #section_extra,
+      duplicates = section_duplicates,
+      duplicate_count = #section_duplicates,
+    }
   end
 
-  for _, command in ipairs(source_commands) do
-    if entry_counts[command] == nil then
-      table.insert(result.missing_commands, command)
+  result.ok = true
+  for _, sr in pairs(result.sections) do
+    if sr.missing_count > 0 or sr.extra_count > 0 or sr.duplicate_count > 0 then
+      result.ok = false
+      break
     end
   end
-
-  for command, count in pairs(entry_counts) do
-    if count > 1 then
-      table.insert(result.duplicate_commands, command)
-    end
+  if result.missing_label_count > 0
+    or result.missing_description_count > 0
+    or result.missing_category_count > 0
+    or result.missing_aliases_count > 0
+    or result.missing_action_count > 0
+    or result.invalid_action_count > 0
+    or result.missing_key_mode_count > 0
+    or result.missing_key_value_count > 0
+  then
+    result.ok = false
   end
-
-  for id, key in pairs(builtin_source_lookup) do
-    if not builtin_entry_lookup[id] then
-      table.insert(result.missing_builtin_keys, builtin_key_source_label(key))
-    end
-  end
-
-  for id, count in pairs(builtin_key_counts) do
-    if count > 1 then
-      table.insert(result.duplicate_builtin_keys, id)
-    end
-  end
-
-  table.sort(result.missing_commands)
-  table.sort(result.extra_commands)
-  table.sort(result.duplicate_commands)
-  table.sort(result.missing_builtin_keys)
-  table.sort(result.extra_builtin_keys)
-  table.sort(result.duplicate_builtin_keys)
-
-  result.missing_command_count = #result.missing_commands
-  result.extra_command_count = #result.extra_commands
-  result.duplicate_command_count = #result.duplicate_commands
-  result.total_builtin_keys = #source_builtin_keys
-  result.registered_builtin_keys = #builtin_entries
-  result.missing_builtin_key_count = #result.missing_builtin_keys
-  result.extra_builtin_key_count = #result.extra_builtin_keys
-  result.duplicate_builtin_key_count = #result.duplicate_builtin_keys
-  result.ok = result.missing_command_count == 0
-    and result.extra_command_count == 0
-    and result.missing_builtin_key_count == 0
-    and result.extra_builtin_key_count == 0
-    and result.missing_label_count == 0
-    and result.missing_description_count == 0
-    and result.missing_category_count == 0
-    and result.missing_aliases_count == 0
-    and result.missing_action_count == 0
-    and result.invalid_action_count == 0
-    and result.duplicate_command_count == 0
-    and result.missing_key_mode_count == 0
-    and result.missing_key_value_count == 0
-    and result.duplicate_builtin_key_count == 0
 
   return result
 end
@@ -1316,37 +1453,39 @@ end
 
 function M.coverage_lines()
   local result = M.coverage()
-  local lines = {
-    '== カバレッジ ==',
-    ('変換候補 Exコマンド数: %d'):format(result.total_commands),
-    ('command_palette.lua Exコマンド登録数: %d'):format(result.registered_commands),
-    ('未登録コマンド数: %d'):format(result.missing_command_count),
-    ('余剰登録コマンド数: %d'):format(result.extra_command_count),
-    ('変換候補 index.txt 組み込みキー数: %d'):format(result.total_builtin_keys),
-    ('command_palette.lua 組み込みキー登録数: %d'):format(result.registered_builtin_keys),
-    ('未登録組み込みキー数: %d'):format(result.missing_builtin_key_count),
-    ('余剰組み込みキー数: %d'):format(result.extra_builtin_key_count),
-    '',
-    '== 検証 ==',
-    ('label 欠落数: %d'):format(result.missing_label_count),
-    ('description 欠落数: %d'):format(result.missing_description_count),
-    ('category 欠落数: %d'):format(result.missing_category_count),
-    ('aliases 欠落数: %d'):format(result.missing_aliases_count),
-    ('action 欠落数: %d'):format(result.missing_action_count),
-    ('action 不正数: %d'):format(result.invalid_action_count),
-    ('重複 command 数: %d'):format(result.duplicate_command_count),
-    ('key mode 欠落数: %d'):format(result.missing_key_mode_count),
-    ('key 欠落数: %d'):format(result.missing_key_value_count),
-    ('重複組み込みキー数: %d'):format(result.duplicate_builtin_key_count),
-  }
+  local lines = { '== カバレッジ ==' }
+
+  for _, section in ipairs(source_sections) do
+    local sr = result.sections[section.name]
+    if sr then
+      table.insert(lines, ('  %s'):format(section.label))
+      table.insert(lines, ('    変換候補数: %d'):format(sr.total))
+      table.insert(lines, ('    登録数: %d'):format(sr.registered))
+      table.insert(lines, ('    未登録数: %d'):format(sr.missing_count))
+      table.insert(lines, ('    余剰登録数: %d'):format(sr.extra_count))
+    end
+  end
+
+  table.insert(lines, '')
+  table.insert(lines, '== 検証 ==')
+  table.insert(lines, ('label 欠落数: %d'):format(result.missing_label_count))
+  table.insert(lines, ('description 欠落数: %d'):format(result.missing_description_count))
+  table.insert(lines, ('category 欠落数: %d'):format(result.missing_category_count))
+  table.insert(lines, ('aliases 欠落数: %d'):format(result.missing_aliases_count))
+  table.insert(lines, ('action 欠落数: %d'):format(result.missing_action_count))
+  table.insert(lines, ('action 不正数: %d'):format(result.invalid_action_count))
+  table.insert(lines, ('key mode 欠落数: %d'):format(result.missing_key_mode_count))
+  table.insert(lines, ('key 欠落数: %d'):format(result.missing_key_value_count))
 
   local detail_lines = {}
-  append_detail(detail_lines, '未登録コマンド', result.missing_commands)
-  append_detail(detail_lines, '余剰登録コマンド', result.extra_commands)
-  append_detail(detail_lines, '重複 command', result.duplicate_commands)
-  append_detail(detail_lines, '未登録組み込みキー', result.missing_builtin_keys)
-  append_detail(detail_lines, '余剰組み込みキー', result.extra_builtin_keys)
-  append_detail(detail_lines, '重複組み込みキー', result.duplicate_builtin_keys)
+  for _, section in ipairs(source_sections) do
+    local sr = result.sections[section.name]
+    if sr then
+      append_detail(detail_lines, ('未登録: %s'):format(section.label), sr.missing)
+      append_detail(detail_lines, ('余剰登録: %s'):format(section.label), sr.extra)
+      append_detail(detail_lines, ('重複: %s'):format(section.label), sr.duplicates)
+    end
+  end
 
   if #detail_lines > 0 then
     table.insert(lines, '')

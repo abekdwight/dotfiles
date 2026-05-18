@@ -56,6 +56,7 @@ add({ source = 'kana/vim-textobj-entire' })
 add({ source = 'preservim/vim-markdown' })
 add({ source = 'junegunn/goyo.vim' })
 add({ source = 'Mofiqul/dracula.nvim' })
+add({ source = 'mg979/vim-visual-multi' })
 
 add({
   source = 'NeogitOrg/neogit',

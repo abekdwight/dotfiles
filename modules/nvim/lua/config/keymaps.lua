@@ -199,3 +199,34 @@ map('n', '[d', vim.diagnostic.goto_prev, { desc = '前の診断' })
 map('n', ']d', vim.diagnostic.goto_next, { desc = '次の診断' })
 map('n', '<leader>df', vim.diagnostic.open_float, { desc = '診断を表示' })
 map('n', '<leader>dl', vim.diagnostic.setloclist, { desc = '診断リスト' })
+
+local function split_japanese_sentences()
+  local mode = vim.fn.mode()
+  local start_line, end_line
+
+  if mode == 'v' or mode == 'V' then
+    start_line = vim.fn.line("'<")
+    end_line = vim.fn.line("'>")
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+  else
+    start_line = 1
+    end_line = vim.fn.line('$')
+  end
+
+  -- 下から上に処理（行番号がずれるのを防ぐ）
+  for line = end_line, start_line, -1 do
+    local content = vim.fn.getline(line)
+    -- 「。」の直後が「。」または改行でなければ改行を挿入（三点リーダーを保護）
+    local new_content = content:gsub('。([^。\n])', '。\n%1')
+    if new_content ~= content then
+      local parts = vim.split(new_content, '\n', { plain = true })
+      vim.fn.setline(line, parts[1])
+      for i = 2, #parts do
+        vim.fn.append(line + i - 2, parts[i])
+      end
+    end
+  end
+end
+
+map('n', '<leader>js', split_japanese_sentences, { desc = '「。」で改行分割' })
+map('v', '<leader>js', split_japanese_sentences, { desc = '「。」で改行分割' })

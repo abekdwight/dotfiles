@@ -68,6 +68,9 @@ if trouble then
   })
 end
 
+-- vim-visual-multi: multi-cursor editing (default: Ctrl+n)
+vim.g.VM_silent_exit = 1
+
 local aerial = safe_require('aerial')
 if aerial then
   aerial.setup({
