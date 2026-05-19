@@ -217,7 +217,7 @@ local function split_japanese_sentences()
   for line = end_line, start_line, -1 do
     local content = vim.fn.getline(line)
     -- 「。」の直後が「。」または改行でなければ改行を挿入（三点リーダーを保護）
-    local new_content = content:gsub('。([^。\n])', '。\n%1')
+    local new_content = vim.fn.substitute(content, '。\\([^。\\n]\\)', '。\n\\1', 'g')
     if new_content ~= content then
       local parts = vim.split(new_content, '\n', { plain = true })
       vim.fn.setline(line, parts[1])
