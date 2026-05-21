@@ -1,7 +1,7 @@
 expand_candidate() {
   local value="$1"
   case "${value}" in
-    ~/*) printf '%s/%s\n' "${HOME}" "${value#~/}" ;;
+    '~'/*) printf '%s/%s\n' "${HOME}" "${value#'~'/}" ;;
     *) printf '%s\n' "${value}" ;;
   esac
 }
