@@ -55,7 +55,7 @@ add({ source = 'kana/vim-textobj-user' })
 add({ source = 'kana/vim-textobj-entire' })
 add({ source = 'preservim/vim-markdown' })
 add({ source = 'junegunn/goyo.vim' })
-add({ source = 'Mofiqul/dracula.nvim' })
+add({ source = 'LunarVim/darkplus.nvim' })
 add({ source = 'mg979/vim-visual-multi' })
 
 add({
@@ -69,6 +69,7 @@ add({ source = 'nvim-lua/plenary.nvim' })
 add({ source = 'sindrets/diffview.nvim' })
 
 now(function() require('config.mini') end)
+now(function() require('config.minifiles-git') end)
 now(function() require('config.colorscheme') end)
 now(function() require('config.treesitter') end)
 now(function() require('config.lsp') end)
