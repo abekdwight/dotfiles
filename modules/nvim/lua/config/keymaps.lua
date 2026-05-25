@@ -46,76 +46,32 @@ map('n', '<leader>/', function()
 end, { desc = '前回の検索を再開' })
 
 map('n', '<leader>e', function()
-  jump2d.start(jump2d.builtin_opts.word_end)
+  local jump2d = require('mini.jump2d')
+  jump2d.start({ spotter = jump2d.gen_spotter.pattern('[^%s%p]+', 'end') })
 end, { desc = 'ジャンプ(単語末尾)' })
 map('n', '<leader>fe', function()
-  local mini_files = require('mini.files')
-  local uv = vim.uv or vim.loop
   local path = vim.api.nvim_buf_get_name(0)
-  local cwd = vim.fs.normalize(vim.fn.getcwd())
-  local start_path = cwd
-
-  if path ~= '' then
-    start_path = vim.fs.normalize(vim.fs.dirname(path))
-  end
-
-  local git_dirs = vim.fs.find('.git', { upward = true, path = start_path, limit = 1 })
-  local root = cwd
-  if #git_dirs > 0 then
-    root = vim.fs.normalize(vim.fs.dirname(git_dirs[1]))
-  end
-
-  mini_files.open(root, false)
-
   if path == '' then
+    vim.cmd('Neotree toggle')
     return
   end
-
-  local normalized_path = vim.fs.normalize(path)
-  local path_stat = uv.fs_stat(normalized_path)
-  local target = normalized_path
-
-  if not path_stat then
-    target = vim.fs.normalize(vim.fs.dirname(normalized_path))
-  end
-
-  local stack = {}
-  local cursor = target
-  while true do
-    table.insert(stack, cursor)
-    if cursor == root then
-      break
-    end
-
-    local parent = vim.fs.normalize(vim.fs.dirname(cursor))
-    if parent == cursor then
-      return
-    end
-    cursor = parent
-  end
-
-  local branch = {}
-  for i = #stack, 1, -1 do
-    local branch_path = stack[i]
-    if uv.fs_stat(branch_path) then
-      table.insert(branch, branch_path)
-    end
-  end
-
-  if #branch > 0 then
-    mini_files.set_branch(branch)
+  local git_dirs = vim.fs.find('.git', { upward = true, path = vim.fs.dirname(path), limit = 1 })
+  if #git_dirs > 0 then
+    vim.cmd('Neotree toggle dir=' .. vim.fn.fnameescape(vim.fs.dirname(git_dirs[1])))
+  else
+    vim.cmd('Neotree toggle')
   end
 end, { desc = 'ファイラ(プロジェクト)', silent = true })
 map('n', '<leader>-e', function()
   local path = vim.api.nvim_buf_get_name(0)
   if path == '' then
-    require('mini.files').open(vim.fn.getcwd(), true)
+    vim.cmd('Neotree toggle')
     return
   end
-  require('mini.files').open(vim.fs.dirname(path), true)
+  vim.cmd('Neotree toggle dir=' .. vim.fn.fnameescape(vim.fs.dirname(path)))
 end, { desc = 'ファイラ(現在ファイルのディレクトリ)', silent = true })
 map('n', '<leader>E', function()
-  require('mini.files').open(vim.api.nvim_buf_get_name(0), true)
+  vim.cmd('Neotree reveal')
 end, { desc = 'ファイラ(現在ファイル)', silent = true })
 
 map('n', '<leader>ha', function()
@@ -230,3 +186,16 @@ end
 
 map('n', '<leader>js', split_japanese_sentences, { desc = '「。」で改行分割' })
 map('v', '<leader>js', split_japanese_sentences, { desc = '「。」で改行分割' })
+
+map('n', '<leader>yp', function()
+  local path = vim.fn.expand('%:p')
+  if path == '' then return vim.notify('No file', vim.log.levels.WARN) end
+  vim.fn.setreg('+', path)
+  vim.notify(path, vim.log.levels.INFO, { title = 'Absolute path' })
+end, { desc = '絶対パスをコピー' })
+map('n', '<leader>yr', function()
+  local path = vim.fn.expand('%')
+  if path == '' then return vim.notify('No file', vim.log.levels.WARN) end
+  vim.fn.setreg('+', path)
+  vim.notify(path, vim.log.levels.INFO, { title = 'Relative path' })
+end, { desc = '相対パスをコピー' })

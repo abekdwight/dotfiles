@@ -68,7 +68,18 @@ add({
 add({ source = 'nvim-lua/plenary.nvim' })
 add({ source = 'sindrets/diffview.nvim' })
 
+add({
+  source = 'nvim-neo-tree/neo-tree.nvim',
+  branch = 'v3.x',
+  depends = {
+    'nvim-lua/plenary.nvim',
+    'nvim-neotest/nvim-nio',
+    'MunifTanjim/nui.nvim',
+  },
+})
+
 now(function() require('config.mini') end)
+now(function() require('config.neotree') end)
 now(function() require('config.minifiles-git') end)
 now(function() require('config.colorscheme') end)
 now(function() require('config.treesitter') end)
