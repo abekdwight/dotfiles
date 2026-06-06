@@ -30,11 +30,10 @@ local add, now = MiniDeps.add, MiniDeps.now
 add({ source = 'echasnovski/mini.nvim' })
 add({
   source = 'nvim-treesitter/nvim-treesitter',
-  checkout = 'master',
-  monitor = 'main',
+  checkout = 'main',
   hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
 })
-add({ source = 'nvim-treesitter/nvim-treesitter-textobjects' })
+add({ source = 'nvim-treesitter/nvim-treesitter-textobjects', checkout = 'main' })
 
 add({ source = 'neovim/nvim-lspconfig' })
 add({ source = 'williamboman/mason.nvim' })
@@ -45,7 +44,6 @@ add({ source = 'mfussenegger/nvim-lint' })
 add({ source = 'folke/trouble.nvim' })
 add({ source = 'stevearc/aerial.nvim' })
 add({ source = 'mbbill/undotree' })
-add({ source = 'HiPhish/rainbow-delimiters.nvim' })
 add({ source = 'NvChad/nvim-colorizer.lua' })
 add({ source = 'windwp/nvim-ts-autotag' })
 add({ source = 'mrcjkb/rustaceanvim' })
@@ -68,6 +66,8 @@ add({
 add({ source = 'nvim-lua/plenary.nvim' })
 add({ source = 'sindrets/diffview.nvim' })
 
+add({ source = 'lewis6991/gitsigns.nvim' })
+
 add({
   source = 'nvim-neo-tree/neo-tree.nvim',
   branch = 'v3.x',
@@ -87,3 +87,4 @@ now(function() require('config.lsp') end)
 now(function() require('config.extras') end)
 now(function() require('config.formatting') end)
 now(function() require('config.lint') end)
+now(function() require('config.gitsigns') end)

@@ -1016,6 +1016,9 @@ source_sections = {
       return entry
     end,
     source_entry_label = function(entry)
+      if type(entry) == 'table' then
+        return entry.command or ''
+      end
       return entry
     end,
     palette_entry_id = function(entry)

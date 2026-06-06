@@ -824,4 +824,5 @@
     },
     "editor.fontFamily": "Source Han Code JP, Menlo, Monaco, 'Courier New', monospace",
     "roo-cline.deniedCommands": [],
+    "workbench.editor.useModal": "some",
 }

@@ -33,15 +33,15 @@ require('neo-tree').setup({
     },
     git_status = {
       symbols = {
-        added = '✚',
-        modified = '',
-        deleted = '',
-        renamed = '',
-        untracked = '?',
-        ignored = '',
-        unstaged = '',
-        staged = '',
-        conflict = '',
+        added     = '✚',
+        deleted   = '✖',
+        modified  = '',
+        renamed   = '󰁕',
+        untracked = '',
+        ignored   = '',
+        unstaged  = '󰄱',
+        staged    = '',
+        conflict  = '',
       },
     },
   },
@@ -62,6 +62,12 @@ require('neo-tree').setup({
       ['R'] = 'refresh',
       ['<'] = 'prev_source',
       ['>'] = 'next_source',
+      ['P'] = {
+        'toggle_preview',
+        config = {
+          use_float = false,
+        },
+      },
     },
   },
   filesystem = {
@@ -105,6 +111,7 @@ require('neo-tree').setup({
     window = {
       mappings = {
         ['h'] = 'close_node',
+        ['u'] = 'git_toggle_file_stage',
       },
     },
   },

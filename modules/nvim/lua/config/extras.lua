@@ -84,3 +84,17 @@ if aerial then
     },
   })
 end
+
+-- Goyo (zen mode)
+vim.g.goyo_width = 160
+vim.g.goyo_height = '100%'
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GoyoEnter',
+  callback = function()
+    vim.opt.number = true
+    vim.opt.relativenumber = true
+  end,
+})
+
+vim.keymap.set('n', '<leader>z', ':Goyo<CR>', { desc = 'Toggle zen mode (Goyo)' })

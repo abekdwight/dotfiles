@@ -170,6 +170,7 @@ tmux
 tor
 tree
 tree-sitter
+tree-sitter-cli
 unbound
 uncrustify
 urlview

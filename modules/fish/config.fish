@@ -1,4 +1,4 @@
-if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode" && test "$TERM_PROGRAM" != "WarpTerminal" && test "$TERM_PROGRAM" != "zed" && not set -q CMUX_SOCKET && not set -q CMUX_SOCKET_PATH
+if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode" && test "$TERM_PROGRAM" != "WarpTerminal" && test "$TERM_PROGRAM" != "zed" && not set -q CMUX_SOCKET && not set -q CMUX_SOCKET_PATH && not set -q MUXY_SOCKET_PATH
     tmux_attach_session_if_needed
 end
 
@@ -38,5 +38,7 @@ wtp shell-init fish | source
 
 # opencode
 fish_add_path /Users/abekeishi/.opencode/bin
+
+functions -q __phpbrew_set_path; and __phpbrew_set_path
 
 status --is-interactive; and fish_user_key_bindings
