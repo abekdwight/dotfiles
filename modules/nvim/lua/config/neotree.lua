@@ -112,6 +112,12 @@ require('neo-tree').setup({
       mappings = {
         ['h'] = 'close_node',
         ['u'] = 'git_toggle_file_stage',
+        ['cc'] = function()
+          vim.cmd('Neotree close')
+          vim.cmd('botright split')
+          vim.cmd('terminal ++close czg ai')
+          vim.cmd('startinsert')
+        end,
       },
     },
   },
