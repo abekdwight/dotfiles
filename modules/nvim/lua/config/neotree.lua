@@ -115,7 +115,19 @@ require('neo-tree').setup({
         ['cc'] = function()
           vim.cmd('Neotree close')
           vim.cmd('botright split')
-          vim.cmd('terminal ++close czg ai')
+          vim.cmd('terminal czg ai')
+          local buf = vim.api.nvim_get_current_buf()
+          vim.api.nvim_create_autocmd('TermClose', {
+            buffer = buf,
+            once = true,
+            callback = function()
+              vim.schedule(function()
+                if vim.api.nvim_buf_is_valid(buf) then
+                  vim.api.nvim_buf_delete(buf, { force = true })
+                end
+              end)
+            end,
+          })
           vim.cmd('startinsert')
         end,
       },
