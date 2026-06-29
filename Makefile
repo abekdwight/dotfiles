@@ -101,6 +101,13 @@ CMUX_CLEAN_TARGETS +=
 ALL_TARGETS += $(CMUX_TARGETS)
 ALL_CLEAN_TARGETS += $(CMUX_CLEAN_TARGETS)
 
+# orca
+ORCA_TARGETS +=
+ORCA_CLEAN_TARGETS +=
+
+ALL_TARGETS += $(ORCA_TARGETS)
+ALL_CLEAN_TARGETS += $(ORCA_CLEAN_TARGETS)
+
 ####################
 #     commands     #
 ####################

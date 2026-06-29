@@ -48,6 +48,19 @@ make warp-install
 Warp の通常設定は `~/.warp/settings.toml`、キーバインドは `~/.warp/keybindings.yaml` にシンボリックリンクされます。
 `settings.toml` は保存時に反映されますが、`keybindings.yaml` は Warp の再起動が必要です。
 
+## orca install and clean
+
+```bash
+# clean
+make orca-clean
+
+# install
+make orca-install
+```
+
+Orca のキーバインドは `~/.orca/keybindings.json` にシンボリックリンクされます。
+変更は Orca の再読込（`⌘⇧R` / Force Reload）または再起動で反映されます。
+
 ## homebrew backup
 
 バックアップは Brewfile に書き込む

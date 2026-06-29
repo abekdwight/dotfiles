@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "keybindings": {},
+  "platforms": {
+    "darwin": {
+      "sidebar.right.toggle": ["Mod+L", "Ctrl+Shift+B"],
+      "editor.markdownPreview": ["Mod+Shift+V", "Mod+Alt+V"],
+      "terminal.expandPane": ["Mod+Shift+Enter", "Mod+Shift+J"]
+    },
+    "linux": {},
+    "win32": {}
+  }
+}
