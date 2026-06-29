@@ -10,7 +10,7 @@
     "workbench.editorAssociations": {
         "*.copilotmd": "vscode.markdown.preview.editor",
         "*.ipynb": "jupyter.notebook.ipynb",
-        "*.db": "default"
+        "*.db": "default",
     },
     "markdown-preview-github-styles.colorTheme": "light",
     "explorer.confirmDelete": false,
@@ -29,22 +29,22 @@
     //     "editor.defaultFormatter": "onecentlin.laravel-blade"
     // },
     "[sql]": {
-        "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+        "editor.defaultFormatter": "adpyke.vscode-sql-formatter",
     },
     "[scss]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
     },
     "[ruby]": {
-        "editor.defaultFormatter": "misogi.ruby-rubocop"
+        "editor.defaultFormatter": "misogi.ruby-rubocop",
     },
     "[jsonc]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
     },
     "[prisma]": {
-        "editor.defaultFormatter": "Prisma.prisma"
+        "editor.defaultFormatter": "Prisma.prisma",
     },
     "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
     },
     "editor.codeActionsOnSave": {
         "source.fixAll.stylelint": "always",
@@ -58,12 +58,11 @@
         "source.removeUnused.ts": "never",
         "source.organizeImports": "never",
         "source.removeUnusedImports": "never",
-
     },
     "editor.quickSuggestions": {
         "other": false,
         "comments": true,
-        "strings": false
+        "strings": false,
     },
     "editor.quickSuggestionsDelay": 10,
     // "terminal.integrated.rendererType": "dom",
@@ -83,22 +82,22 @@
         "TODO",
         "XXX",
         "[ ]",
-        "[x]"
+        "[x]",
     ],
     "todo-tree.highlights.customHighlight": {
         "[ ]": {
-            "background": "#ff000080"
+            "background": "#ff000080",
         },
         "[x]": {
-            "background": "#00ff0080"
-        }
+            "background": "#00ff0080",
+        },
     },
     "todo-tree.highlights.defaultHighlight": {
         "icon": "alert",
         "type": "tag",
         "foreground": "#cccccc",
         "background": "#3d8cd6",
-        "opacity": 60
+        "opacity": 60,
     },
     // Latexでも動作するようにする
     // ref : https://github.com/Gruntfuggly/todo-tree/issues/129
@@ -152,7 +151,7 @@
         "v": "v run",
         "sass": "sass --style expanded",
         "scss": "scss --style expanded",
-        "less": "cd $dir && lessc $fileName $fileNameWithoutExt.css"
+        "less": "cd $dir && lessc $fileName $fileNameWithoutExt.css",
     },
     "C_Cpp.updateChannel": "Insiders",
     "editor.lineNumbers": "relative",
@@ -182,14 +181,14 @@
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
-                "%DOC%"
-            ]
+                "%DOC%",
+            ],
         },
         // makeファイル経由でビルドを行った時
         {
             "name": "LuaLaTex (Makefile)",
             "command": "make",
-            "args": ["draft"]
+            "args": ["draft"],
             // "args": [
             //   "-f", "-gg", "-pv", "-lualatex", "-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOC%"
             // ]
@@ -201,8 +200,8 @@
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
-                "%DOC%"
-            ]
+                "%DOC%",
+            ],
         },
         // latexmk を利用した xelatex によるビルドコマンド
         {
@@ -216,8 +215,8 @@
                 "-xelatex",
                 "-synctex=1",
                 "-file-line-error",
-                "%DOC%"
-            ]
+                "%DOC%",
+            ],
         },
         // latexmk を利用した uplatex によるビルドコマンド
         {
@@ -230,8 +229,8 @@
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
-                "%DOC%"
-            ]
+                "%DOC%",
+            ],
         },
         // latexmk を利用した platex によるビルドコマンド
         // 古い LaTeX のテンプレートを使いまわしている (ドキュメントクラスが jreport や jsreport ) 場合のため
@@ -247,40 +246,40 @@
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
-                "%DOC%"
-            ]
-        }
+                "%DOC%",
+            ],
+        },
     ],
     // latex-workshop.latex.recipes: Recipe の定義
     "latex-workshop.latex.recipes": [
         // LuaLaTeX で書かれた文書のビルドレシピ
         {
             "name": "LuaLaTeX",
-            "tools": ["Latexmk (LuaLaTeX)"]
+            "tools": ["Latexmk (LuaLaTeX)"],
         },
         {
             "name": "PDFLaTeX",
-            "tools": ["Latexmk (pdflatex)"]
+            "tools": ["Latexmk (pdflatex)"],
         },
         {
             "name": "Makefile",
-            "tools": ["LuaLaTex (Makefile)"]
+            "tools": ["LuaLaTex (Makefile)"],
         },
         // XeLaTeX で書かれた文書のビルドレシピ
         {
             "name": "XeLaTeX",
-            "tools": ["Latexmk (XeLaTeX)"]
+            "tools": ["Latexmk (XeLaTeX)"],
         },
         // LaTeX(upLaTeX) で書かれた文書のビルドレシピ
         {
             "name": "upLaTeX",
-            "tools": ["Latexmk (upLaTeX)"]
+            "tools": ["Latexmk (upLaTeX)"],
         },
         // LaTeX(pLaTeX) で書かれた文書のビルドレシピ
         {
             "name": "pLaTeX",
-            "tools": ["Latexmk (pLaTeX)"]
-        }
+            "tools": ["Latexmk (pLaTeX)"],
+        },
     ],
     // latex-workshop.latex.magic.args: マジックコメント付きの LaTeX ドキュメントをビルドする設定
     // '%!TEX' で始まる行はマジックコメントと呼ばれ、LaTeX のビルド時にビルドプログラムに解釈され、
@@ -293,7 +292,7 @@
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
-        "%DOC%"
+        "%DOC%",
     ],
     // latex-workshop.latex.clean.fileTypes: クリーンアップ時に削除されるファイルの拡張子
     // LaTeX 文書はビルド時に一時ファイルとしていくつかのファイルを生成するが、最終的に必要となるのは
@@ -325,7 +324,7 @@
         "_minted*",
         "*.nav",
         "*.snm",
-        "*.vrb"
+        "*.vrb",
     ],
     // latex-workshop.view.pdf.viewer: PDF ビューアの開き方
     // VSCode 自体には PDF ファイルを閲覧する機能が備わっていないが、
@@ -347,7 +346,7 @@
     "latex-workshop.latexindent.path": "/Library/TeX/texbin/latexindent",
     "[latex]": {
         "editor.fontSize": 12,
-        "editor.defaultFormatter": "James-Yu.latex-workshop"
+        "editor.defaultFormatter": "James-Yu.latex-workshop",
     },
     "editor.rulers": [120],
     // ****************************
@@ -358,23 +357,23 @@
     "vim.normalModeKeyBindings": [
         {
             "before": ["enter"],
-            "after": ["i", "enter", "esc"]
+            "after": ["i", "enter", "esc"],
         },
         {
             "before": ["<space>"],
-            "after": ["<leader>", "<leader>"]
-        }
+            "after": ["<leader>", "<leader>"],
+        },
     ],
     "vim.normalModeKeyBindingsNonRecursive": [
         // https://www.it-swarm.jp.net/ja/visual-studio-code/vs-code%EF%BC%9Avs-code%E3%81%A7%E6%8A%98%E3%82%8A%E8%BF%94%E3%81%99%E3%81%A8%E3%81%8D%E3%81%AB%E3%80%81%E8%A1%A8%E7%A4%BA%E8%A1%8C%E3%81%94%E3%81%A8%E3%81%AB%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E7%A7%BB%E5%8B%95%E3%81%99%E3%82%8B%E3%81%AB%E3%81%AF%E3%81%A9%E3%81%86%E3%81%99%E3%82%8C%E3%81%B0%E3%82%88%E3%81%84%E3%81%A7%E3%81%99%E3%81%8B%EF%BC%9F/944418622/
         {
             "before": ["x"],
-            "after": ["\"", "_", "x"]
+            "after": ["\"", "_", "x"],
         },
         {
             "before": ["s"],
-            "after": ["\"", "_", "s"]
-        }
+            "after": ["\"", "_", "s"],
+        },
     ],
     /*
      * for vim-easyMotion
@@ -406,7 +405,7 @@
         "*.side": "json",
         "*.jb": "ruby",
         "*.neon": "yaml",
-        "*.sql": "pgsql"
+        "*.sql": "pgsql",
     },
     "dart.previewFlutterUiGuidesCustomTracking": true,
     "outline.showVariables": false,
@@ -488,7 +487,7 @@
         "vinaigre",
         "vuedraggable",
         "welbox",
-        "yamato"
+        "yamato",
     ],
     "workbench.editor.enablePreview": false,
     "cSpell.userWords": [
@@ -624,7 +623,7 @@
         "wpulike",
         "yamamoto",
         "yukihide",
-        "zgrep"
+        "zgrep",
     ],
     "editor.formatOnPaste": true,
     "editor.fontSize": 11,
@@ -635,10 +634,10 @@
         ".git/objects",
         ".vscode",
         ".vscode-insiders",
-        "composer.json"
+        "composer.json",
     ],
     "eslint.codeAction.showDocumentation": {
-        "enable": false
+        "enable": false,
     },
     "eslint.debug": true,
     "github.copilot.enable": {
@@ -646,7 +645,7 @@
         "yaml": true,
         "plaintext": false,
         "markdown": true,
-        "scminput": false
+        "scminput": false,
     },
     "php.format.rules.alignConsecutiveAssignments": false,
     "phpunit.phpunit": "./vendor/bin/phpunit",
@@ -666,7 +665,7 @@
     "prettier.semi": false,
     "dart.devToolsBrowser": "default",
     "ruby.useBundler": true,
-    "extensions.autoUpdate": "onlyEnabledExtensions",
+    "extensions.autoUpdate": "on",
     "intelephense.format.enable": false,
     "ruby.rubocop.useBundler": true,
     "editor.formatOnSave": true,
@@ -748,7 +747,7 @@
         "Zend OPcache",
         "zip",
         "zlib",
-        "wordpress"
+        "wordpress",
     ],
     "security.promptForLocalFileProtocolHandling": false,
     "prettier.requireConfig": true,
@@ -759,14 +758,14 @@
     "solargraph.useBundler": false,
     "explorer.confirmPasteNative": false,
     "[postgres]": {
-        "editor.formatOnSave": false
+        "editor.formatOnSave": false,
     },
     "vue.server.hybridMode": false,
     "prisma.showPrismaDataPlatformNotification": false,
     "github.copilot.editor.enableAutoCompletions": true,
     "[markdown]": {
         "editor.defaultFormatter": "yzhang.markdown-all-in-one",
-        "diffEditor.ignoreTrimWhitespace": false
+        "diffEditor.ignoreTrimWhitespace": false,
     },
     "diffEditor.maxComputationTime": 0,
     "scm.experimental.showHistoryGraph": true,
@@ -775,13 +774,12 @@
     "diffEditor.renderSideBySide": true,
     "diffEditor.ignoreTrimWhitespace": true,
     "liveSassCompile.settings.formats": [
-
         {
             "format": "expanded",
             "extensionName": ".css",
             "savePath": "./src/assets/sass/",
-            "savePathReplacementPairs": null
-        }
+            "savePathReplacementPairs": null,
+        },
     ],
     "emmet.showSuggestionsAsSnippets": true,
     "roo-cline.allowedCommands": [
@@ -793,12 +791,12 @@
         "yarn format:check",
         "npm test",
         "npm install",
-        "tsc"
+        "tsc",
     ],
     "redoclyOpenAPI.user.anonymousId": "9505b682-a13b-4333-a526-2c796f540e82",
     "editor.stickyScroll.enabled": false,
     "cSpell.enabledFileTypes": {
-        "log": false
+        "log": false,
     },
     "dart.flutterSdkPath": "/Users/abekeishi/flutter",
     "docker.extension.enableComposeLanguageServer": false,
@@ -815,14 +813,15 @@
         "editor.quickSuggestions": {
             "other": true,
             "comments": false,
-            "strings": true
+            "strings": true,
         },
-        "editor.defaultFormatter": "redhat.vscode-yaml"
+        "editor.defaultFormatter": "redhat.vscode-yaml",
     },
     "[github-actions-workflow]": {
-        "editor.defaultFormatter": "redhat.vscode-yaml"
+        "editor.defaultFormatter": "redhat.vscode-yaml",
     },
     "editor.fontFamily": "Source Han Code JP, Menlo, Monaco, 'Courier New', monospace",
     "roo-cline.deniedCommands": [],
     "workbench.editor.useModal": "some",
+    "scm.repositories.selectionMode": "single",
 }
