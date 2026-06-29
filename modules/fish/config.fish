@@ -1,4 +1,4 @@
-if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode" && test "$TERM_PROGRAM" != "WarpTerminal" && test "$TERM_PROGRAM" != "zed" && not set -q CMUX_SOCKET && not set -q CMUX_SOCKET_PATH && not set -q MUXY_SOCKET_PATH
+if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode" && test "$TERM_PROGRAM" != "WarpTerminal" && test "$TERM_PROGRAM" != "zed" && test "$TERM_PROGRAM" != "Orca" && not set -q CMUX_SOCKET && not set -q CMUX_SOCKET_PATH && not set -q MUXY_SOCKET_PATH
     tmux_attach_session_if_needed
 end
 
