@@ -56,6 +56,7 @@ $(FISH_COMPLETION_DIR):
 	curl $(FISH_DOCKER_COMPOSE_COMPLETION_FILE) -o $(FISH_COMPLETION_DIR)/docker-compose.fish
 	curl $(FISH_FISHER_COMPLETION_FILE) -o $(FISH_COMPLETION_DIR)/fisher.fish
 	ln -sf $(SELF_FISH_DIR)/completions/ecschedule.fish $(FISH_COMPLETION_DIR)/ecschedule.fish
+	ln -sf $(SELF_FISH_DIR)/completions/tailscale.fish $(FISH_COMPLETION_DIR)/tailscale.fish
 
 
 $(FISH_CONFIG_DIR):

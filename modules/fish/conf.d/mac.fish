@@ -48,4 +48,7 @@ if test (uname) = "Darwin"
     # for nvim
     alias n="nvim"
 
+    # for Tailscale CLI (App Store版はGUIバイナリがCLIを兼ねる)
+    alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
 end
