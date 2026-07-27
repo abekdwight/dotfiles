@@ -18,3 +18,5 @@ diff.patch.private
 
 .devenv/
 .direnv/
+
+**/.claude/settings.local.json
