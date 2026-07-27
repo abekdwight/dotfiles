@@ -1,8 +1,11 @@
 *.swp
 *~
 .DS_Store
+.envrc
 
 tmp/*
 !tmp/.gitkeep
 
 modules/nvim/lua/config/command_palette_source.lua
+
+.serena/
