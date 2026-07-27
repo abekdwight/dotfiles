@@ -1,6 +1,7 @@
 if type -q tmux && test -z $TMUX && status --is-login && test "$TERM_PROGRAM" != "vscode" && test "$TERM_PROGRAM" != "WarpTerminal" && test "$TERM_PROGRAM" != "zed" && test "$TERM_PROGRAM" != "Orca" && not set -q CMUX_SOCKET && not set -q CMUX_SOCKET_PATH && not set -q MUXY_SOCKET_PATH
     tmux_attach_session_if_needed
-else if type -q tmux && test -z $TMUX && test "$TERM_PROGRAM" = "Orca" && status --is-interactive && not set -q CLAUDE_CODE_SESSION_ID && not set -q CODEX_COMPANION_SESSION_ID
+else if set -q ORCA_ENABLE_TMUX && type -q tmux && test -z $TMUX && test "$TERM_PROGRAM" = "Orca" && status --is-interactive && not set -q CLAUDE_CODE_SESSION_ID && not set -q CODEX_COMPANION_SESSION_ID
+    # 一時検証のため、Orca の使い捨て tmux 起動は ORCA_ENABLE_TMUX があるときだけ有効化する。
     # Orca で手動オープンした対話ターミナルは、ペイン分割・スクロール用に使い捨て tmux を起動する。
     # エージェント(Claude Code / Codex)が自動起動したターミナルは上の条件で除外し、素の shell に保つ。
     tmux_start_ephemeral_session
