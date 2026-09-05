@@ -1,6 +1,10 @@
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
 
+[settings.npm]
+shell_out = true
+
 [tools]
-node = "22.23.2"
+node = "24.18.0"
 pnpm = "10.24.0"
+"npm:@efoo/ccprofile" = "latest"

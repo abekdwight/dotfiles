@@ -8,6 +8,7 @@ MISE_CLEAN_TARGETS += mise-clean
 .PHONY: mise-install
 mise-install: $(MISE_CONFIG_DIR)
 	ln -sf $(SELF_MISE_DIR)/config.toml $(MISE_CONFIG_FILE)
+	mise install
 
 $(MISE_CONFIG_DIR):
 	mkdir -p $(MISE_CONFIG_DIR)
