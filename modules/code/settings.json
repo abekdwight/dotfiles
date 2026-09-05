@@ -395,6 +395,8 @@
     "zenMode.showTabs": "single",
     "zenMode.hideLineNumbers": false,
     "zenMode.silentNotifications": false,
+    "zenMode.centerLayout": true,
+    "workbench.editor.centeredLayoutFixedWidth": true,
     "editor.maxTokenizationLineLength": 40000,
     "files.associations": {
         "*.stub": "php",
@@ -406,6 +408,7 @@
         "*.jb": "ruby",
         "*.neon": "yaml",
         "*.sql": "pgsql",
+        "*.mdx": "markdown",
     },
     "dart.previewFlutterUiGuidesCustomTracking": true,
     "outline.showVariables": false,
