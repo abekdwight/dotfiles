@@ -9,3 +9,4 @@ tmp/*
 modules/nvim/lua/config/command_palette_source.lua
 
 .serena/
+.omo/

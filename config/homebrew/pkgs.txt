@@ -109,6 +109,7 @@ mas
 mcrypt
 mecab
 mecab-ipadic
+mise
 mhash
 mpdecimal
 mysql@5.7

@@ -24,6 +24,16 @@ make fish-install
 make fish-update
 ```
 
+## mise install and clean
+
+```bash
+# clean
+make mise-clean
+
+# install
+make mise-install
+```
+
 ## tmux install and clean
 
 ```bash

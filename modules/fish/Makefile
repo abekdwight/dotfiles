@@ -44,7 +44,6 @@ $(FISH_FUNCTION_DIR):
 	ln -sf $(SELF_FISH_DIR)/functions/peco_z.fish $(FISH_FUNCTION_DIR)/peco_z.fish
 	ln -sf $(SELF_FISH_DIR)/functions/peco_tmux.fish $(FISH_FUNCTION_DIR)/peco_tmux.fish
 	ln -sf $(SELF_FISH_DIR)/functions/mdm.fish $(FISH_FUNCTION_DIR)/mdm.fish
-	ln -sf $(SELF_FISH_DIR)/functions/prco_nodebrew.fish $(FISH_FUNCTION_DIR)/prco_nodebrew.fish
 	ln -sf $(SELF_FISH_DIR)/functions/prco_phpbrew.fish $(FISH_FUNCTION_DIR)/prco_phpbrew.fish
 	ln -sf $(SELF_FISH_DIR)/functions/tmux_attach_session_if_needed.fish $(FISH_FUNCTION_DIR)/tmux_attach_session_if_needed.fish
 	ln -sf $(SELF_FISH_DIR)/functions/tmux_start_ephemeral_session.fish $(FISH_FUNCTION_DIR)/tmux_start_ephemeral_session.fish
