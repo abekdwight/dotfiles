@@ -7,4 +7,5 @@ shell_out = true
 [tools]
 node = "24.18.0"
 pnpm = "10.24.0"
-"npm:@efoo/ccprofile" = "latest"
+"npm:@efoo/ccprofile" = "0.5.1"
+"npm:typescript-language-server" = "6.0.0"
